@@ -9,7 +9,7 @@ app.get('/', (req, res) => {
 });
 
 app.get('/login', (req, res) => {
-  res.send('Hello you are in the index');
+  res.send('Hello you are in the login');
 });
 
 app.listen(PORT, HOST);
