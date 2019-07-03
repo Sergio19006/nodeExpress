@@ -1,6 +1,18 @@
 const express = require('express');
+const bodyParse = require('body-parser');
+const fs = require("fs");
 
-const PORT = 8080;
+const router = express.Router();
+
+const app = express();
+app.use(bodyParse.urlencoded({ extended: true }));
+app.use(bodyParse.json());
+
+const moviesRouter = require('./routes/moviesRouter');
+
+app.use('/movies',moviesRouter);
+
+const PORT = 8081;
 const HOST = '0.0.0.0';
 
 const users = [
@@ -15,14 +27,11 @@ const users = [
 ]
 
 
-const app = express();
 app.get('/', (req, res) => {
-  console.log("Aparcao: ",req.headers);
   res.json([{message: 'Hello world'}]);
 });
 
 app.get('/users', (req, res) => {
-  console.log("Aparcao: ",req.headers);
   res.json([{users: users}]);
 });
 
@@ -35,6 +44,33 @@ app.get('/users/:id', (req, res) => {
 app.get('/login', (req, res) => {
   res.send('Hello you are in the login');
 });
+
+function bodyIsEmpty(body){
+  if(body == null || body == {} || body.name == null || body.name == "")
+    return true;
+
+  else{
+    return false;
+  }  
+}
+
+app.post('/newUser', (req, res) => {
+  console.log(req.body);
+  if(bodyIsEmpty(req.body)){
+    res.status(400).send("Eso no se puede maquina");
+    console.log("esta vicio");
+  }
+  const newUSer = {
+    id: Math.floor(Math.random() * 6) + 1,
+    name: req.body.name
+    
+  }
+  users.push(newUSer);
+  res.json(users);
+});
+
+
+
 
 app.listen(PORT, HOST);
 console.log(`Running on http://${HOST}:${PORT}`);
