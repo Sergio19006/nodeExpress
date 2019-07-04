@@ -2,10 +2,8 @@ var express = require("express");
 const app = express();
 var router = express.Router();
 const fs = require("fs");
-const bodyParse = require('body-parser');
 const _ = require('lodash');
-app.use(bodyParse.urlencoded({ extended: true }));
-app.use(bodyParse.json());
+app.use(express.json());
 
 function loadMovies() {
   let content;
@@ -15,52 +13,69 @@ function loadMovies() {
 }
 
 function saveMovies(movies){
-  fs.writeFile('mov.json', JSON.stringify(movies), (err) => {  
+  fs.writeFile('./mov.json', JSON.stringify(movies), (err) => {  
     if (err) throw err;
     console.log('movies saved!');
   });
 } 
-let movies = loadMovies();
 
+let movies = loadMovies();
 
 router.get('/',(req,res) => {
   res.status(200).json(movies);
 });
 
-router.get('/like',(req,res) => {
-  console.log("estoy en like");
+router.post('/like',(req,res) => {
   let title = req.body.title;
   movies.map(m =>{
     if(title == m.title)
       m.like = true;
   });
-
   saveMovies(movies);
+  movies = loadMovies();
   res.status(200).json(movies);
 });
 
-router.get('/dislike',(req,res) => {
-  console.log("estoy en dislike");
+router.post('/dislike',(req,res) => {
   let title = req.body.title;
-  let peli = movies.find(m => title == m.title)
-  peli.like = false;
-  res.status(200).send(peli);
+  movies.map(m => { 
+    if(title == m.title)
+      m.like = false;
+  });
+  saveMovies(movies);
+  movies = loadMovies();
+  res.status(200).send(movies);
 })
 
-router.get('/addMovie',(req,res) => {
+router.post('/addMovie',(req,res) => {
   let movie = req.body;
   movies.push(movie);
   saveMovies(movies);
-  res.status(200).send(movie);
+  movies = loadMovies();
+  res.status(200).send(movies);
+})
+
+router.put('/updateMovie',(req,res) => {
+  let newtitle = req.body.newtitle;
+  let title = req.body.title;
+  movies.map(m => { 
+    if(title == m.title)
+      m.title = newtitle;
+  });
+  saveMovies(movies);
+  movies = loadMovies();
+  res.status(200).send(movies);
+
 })
 
 
-router.get('/removeMovie',(req,res) => {
+router.delete('/removeMovie',(req,res) => {
   let movie = req.body;
   let newMovies = _.remove(movies,function(m){
     return m.title != movie.title;
   })
   saveMovies(newMovies);
+  movies = loadMovies();
   res.status(200).send(movie);
 })
 
