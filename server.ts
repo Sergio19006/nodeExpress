@@ -1,13 +1,6 @@
 const express = require('express');
-const bodyParse = require('body-parser');
-const fs = require("fs");
-
-const router = express.Router();
-
 const app = express();
-app.use(bodyParse.urlencoded({ extended: true }));
-app.use(bodyParse.json());
-
+app.use(express.json());
 const moviesRouter = require('./routes/moviesRouter');
 
 app.use('/movies',moviesRouter);
