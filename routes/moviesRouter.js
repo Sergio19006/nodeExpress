@@ -23,7 +23,7 @@ router.post('/like',async (req,res) => {
   res.status(200).json(movie);
 });
 
-router.post('/dislike',(req,res) => {
+router.post('/dislike',async (req,res) => {
   let movie = await Database.like(req.body.title); 
   res.status(200).json(movie);
 })
@@ -39,9 +39,9 @@ router.put('/updateMovie', async (req,res) => {
 })
 
 
-router.delete('/removeMovie',(req,res) => {
+router.delete('/removeMovie', async (req,res) => {
   let title = req.body.title;
-  const movie = Database.removeMovie(title);
+  const movie = await Database.removeMovie(title);
   res.status(200).send(movie);
 })
 

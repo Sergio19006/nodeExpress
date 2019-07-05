@@ -42,7 +42,7 @@ class Database {
     return await Movie.findOneAndUpdate({title: title}, {$set: {title: newTitle}});
   }
 
-  async  removeMovie(title) {
+  async removeMovie(title) {
     return await Movie.deleteOne({title:title});
   }
 
