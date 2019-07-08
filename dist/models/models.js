@@ -11,3 +11,4 @@ const Movie = Mongoose.model("Movie", MovieSchema);
 Mongoose.connect("mongodb://localhost:27017/movie");
 Mongoose.set("useFindAndModify", false);
 module.exports = Movie;
+//# sourceMappingURL=models.js.map
