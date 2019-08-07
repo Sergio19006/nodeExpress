@@ -1,51 +1,51 @@
 const mongoose = require('mongoose');
 const movie = require('./models');
 
-class Database {
+export class Database {
   constructor() {
   }
 
-  async findAllmovies() {
+  async findAllMovies() {
     const movies = await movie.find();
     return movies;
 
   }
 
-  async findmovie(title) {
+  async findMovie(title: string) {
     return await movie.findOne({ title: title });
   }
 
-  async like(title) {
+  async like(title: string) {
     return await movie.findOneAndUpdate({title:title}, {$set:{like:true}});
   }
 
-  async  dislike(title) {
+  async  dislike(title: string) {
     return await movie.findOneAndUpdate({title:title}, {$set:{like:false}});
   }
 
-  async addmovie(movie) {
+  
+  async addMovie(mov: any) {
     let data = new movie({
-      title: movie.title,
-      year: movie.year,
-      cast: movie.cast,
-      genres: movie.genres,
-      like: movie.like
+      title: mov.title,
+      year: mov.year,
+      cast: mov.cast,
+      genres: mov.genres,
+      like: mov.like
     });
 
     data.save();
     return data;
   }
 
-  async updatemovie(title, newTitle) {
+  async updateMovie(title: string, newTitle: string) {
     return await movie.findOneAndUpdate({title: title}, {$set: {title: newTitle}});
   }
 
-  async removemovie(title) {
+  async removeMovie(title: string) {
     return await movie.deleteOne({title:title});
   }
 
 }
 
-module.exports = Database;
 
 
